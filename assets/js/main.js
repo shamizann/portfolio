@@ -55,3 +55,14 @@ window.addEventListener('load', () => {
     });
   });
 });
+
+// Contact form handling
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+  // Prevent form submission from reloading the page
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // Add your form validation and submission logic here
+    alert('Form submitted! (This is a placeholder - implement actual submission logic)');
+  });
+}
