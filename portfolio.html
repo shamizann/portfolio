@@ -9,6 +9,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css" />
+  <script>
+    // Prevent flash of unstyled theme - Dark mode default
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+      }
+    })();
+  </script>
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
@@ -40,7 +49,7 @@
 <section class="page-header">
   <div class="container narrow">
     <h1>Portfolio / Projects</h1>
-    <p>Selected work with brief descriptions, screenshots, and links.</p>
+    <p>Selected work with brief descriptions, screenshots and links.</p>
   </div>
 </section>
 
@@ -51,7 +60,6 @@
       <h3>Systems Modernization</h3>
       <p>Refactored and extended internal web apps; improved reliability and scalability.</p>
       <ul class="tags"><li>PHP</li><li>SQL Server</li><li>SSIS</li><li>SSRS</li></ul>
-      <p><a href="https://www.linkedin.com/in/shamizan" rel="noopener">Case notes</a></p>
     </div>
   </article>
   <article class="project-card">
@@ -60,7 +68,6 @@
       <h3>Reporting Automation Pipeline</h3>
       <p>Automated daily reports using SQL + SSRS with scheduled delivery.</p>
       <ul class="tags"><li>SQL</li><li>SSRS</li><li>Automation</li></ul>
-      <p><a href="https://www.linkedin.com/in/shamizan" rel="noopener">Overview</a></p>
     </div>
   </article>
   <article class="project-card">
@@ -69,14 +76,13 @@
       <h3>Warehouse Management System</h3>
       <p>Contributed to project management and development for WMS.</p>
       <ul class="tags"><li>.NET</li><li>Oracle</li><li>Networking</li></ul>
-      <p><a href="https://www.linkedin.com/in/shamizan" rel="noopener">Notes</a></p>
     </div>
   </article>
 </section>
 
 <section class="container">
   <h2>Web Development by Landing Pages</h2>
-  <p>These five landing pages demonstrate layout, component reuse, and responsive patterns. Replace the placeholders with your real screenshots.</p>
+  <p>These five landing pages demonstrate layout, component reuse and responsive patterns. Replace the placeholders with your real screenshots.</p>
   <div class="projects grid-3">
     <article class="project-card">
       <img src="assets/img/projects/agency.jpg" alt="Agency — Corporate Landing Page" />
@@ -90,7 +96,7 @@
       <img src="assets/img/projects/explore.jpg" alt="Explore — Travel &amp; Destinations" />
       <div class="project-body">
         <h3>Explore</h3>
-        <p>Travel discovery with hero search, cards grid, and map teaser.</p>
+        <p>Travel discovery with hero search, cards grid and map teaser.</p>
         <ul class="tags"><li>HTML</li><li>CSS</li><li>JS</li><li>Cards</li></ul>
       </div>
     </article>
@@ -106,7 +112,7 @@
       <img src="assets/img/projects/mega-shop.jpg" alt="Mega Shop — E‑commerce Home" />
       <div class="project-body">
         <h3>Mega Shop</h3>
-        <p>E‑commerce homepage with mega‑menu, featured products, and promo banners.</p>
+        <p>E‑commerce homepage with mega‑menu, featured products and promo banners.</p>
         <ul class="tags"><li>E‑commerce</li><li>Mega‑menu</li><li>CTA</li></ul>
       </div>
     </article>
@@ -114,7 +120,7 @@
       <img src="assets/img/projects/sport-shop.jpg" alt="Sport Shop — Retail Landing" />
       <div class="project-body">
         <h3>Sport Shop</h3>
-        <p>Retail landing highlighting categories, deals, and newsletter signup.</p>
+        <p>Retail landing highlighting categories, deals and newsletter signup.</p>
         <ul class="tags"><li>Retail</li><li>Promo</li><li>Forms</li></ul>
       </div>
     </article>

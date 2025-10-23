@@ -1,31 +1,64 @@
 
-// Mobile nav
+// Mobile nav - Fixed
 const navToggle = document.querySelector('.nav-toggle');
 const nav = document.getElementById('nav');
-if (navToggle) {
+if (navToggle && nav) {
   navToggle.addEventListener('click', () => {
-    const open = nav.getAttribute('data-open') === 'true';
-    nav.setAttribute('data-open', String(!open));
-    navToggle.setAttribute('aria-expanded', String(!open));
-    nav.style.display = open ? 'none' : 'block';
+    const isOpen = nav.classList.contains('mobile-open');
+    
+    if (isOpen) {
+      nav.classList.remove('mobile-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    } else {
+      nav.classList.add('mobile-open');
+      navToggle.setAttribute('aria-expanded', 'true');
+    }
+  });
+  
+  // Close nav when clicking a link (smooth UX)
+  const navLinks = nav.querySelectorAll('a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('mobile-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
   });
 }
 
-// Theme toggle
+// Theme toggle - Simple Dark/Light Mode
 const themeBtn = document.getElementById('theme-toggle');
-function setTheme(mode){ 
-  if(mode==='light'){ document.documentElement.classList.add('light'); }
-  else { document.documentElement.classList.remove('light'); }
+
+function setTheme(mode) {
+  if (mode === 'light') {
+    document.documentElement.classList.add('light');
+  } else {
+    document.documentElement.classList.remove('light');
+  }
+  
+  // Update button icon and aria-label
+  if (themeBtn) {
+    const icon = mode === 'light' ? '☀️' : '🌙';
+    const label = mode === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+    themeBtn.textContent = icon;
+    themeBtn.setAttribute('aria-label', label);
+  }
+  
   localStorage.setItem('theme', mode);
 }
-if(themeBtn){
+
+if (themeBtn) {
+  // Initialize theme - default to dark
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  setTheme(savedTheme);
+  
+  // Handle theme toggle click - switch between light and dark
   themeBtn.addEventListener('click', () => {
-    const isLight = document.documentElement.classList.contains('light');
-    setTheme(isLight ? 'dark' : 'light');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
   });
-  const saved = localStorage.getItem('theme');
-  if(saved){ setTheme(saved); }
 }
+
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // Nav current page highlighting
@@ -59,10 +92,91 @@ window.addEventListener('load', () => {
 // Contact form handling
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-  // Prevent form submission from reloading the page
+  const nameField = document.getElementById('name');
+  const emailField = document.getElementById('email');
+  const subjectField = document.getElementById('subject');
+  const messageField = document.getElementById('message');
+
+  // Email validation regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  // Function to show error message
+  function showError(field, message) {
+    // Remove existing error if any
+    clearError(field);
+    
+    // Add error class to field
+    field.classList.add('error');
+    
+    // Create and insert error message
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.textContent = message;
+    field.parentElement.appendChild(errorDiv);
+  }
+
+  // Function to clear error message
+  function clearError(field) {
+    field.classList.remove('error');
+    const errorMsg = field.parentElement.querySelector('.error-message');
+    if (errorMsg) {
+      errorMsg.remove();
+    }
+  }
+
+  // Validate individual field
+  function validateField(field) {
+    const value = field.value.trim();
+    
+    if (!value) {
+      showError(field, 'This field is required.');
+      return false;
+    }
+    
+    // Additional email validation
+    if (field.type === 'email' && !emailRegex.test(value)) {
+      showError(field, 'Please enter a valid email address (e.g., name@example.com).');
+      return false;
+    }
+    
+    clearError(field);
+    return true;
+  }
+
+  // Real-time validation on blur
+  [nameField, emailField, subjectField, messageField].forEach(field => {
+    field.addEventListener('blur', () => validateField(field));
+    field.addEventListener('input', () => {
+      if (field.classList.contains('error')) {
+        validateField(field);
+      }
+    });
+  });
+
+  // Form submission
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    // Add your form validation and submission logic here
-    alert('Form submitted! (This is a placeholder - implement actual submission logic)');
+    
+    // Validate all fields
+    const isNameValid = validateField(nameField);
+    const isEmailValid = validateField(emailField);
+    const isSubjectValid = validateField(subjectField);
+    const isMessageValid = validateField(messageField);
+    
+    // If all fields are valid
+    if (isNameValid && isEmailValid && isSubjectValid && isMessageValid) {
+      // Success message
+      alert('Thank you! Your message has been sent successfully.\n\n(Note: This is a demo. In production, this would send to a server.)');
+      
+      // Optional: Clear the form
+      contactForm.reset();
+    } else {
+      // Scroll to first error
+      const firstError = contactForm.querySelector('.error');
+      if (firstError) {
+        firstError.focus();
+        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   });
 }

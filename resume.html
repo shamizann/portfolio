@@ -9,6 +9,15 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css" />
+  <script>
+    // Prevent flash of unstyled theme - Dark mode default
+    (function() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      if (theme === 'light') {
+        document.documentElement.classList.add('light');
+      }
+    })();
+  </script>
 </head>
 <body>
 <a class="skip-link" href="#content">Skip to content</a>
@@ -50,7 +59,7 @@
   <article class="timeline">
     <div class="entry">
       <div class="when">Dec 2020 – Present · Kuala Lumpur</div>
-      <h3>IT Assistant Officer — Disclose</h3>
+      <h3>IT Assistant Officer — Kraftangan Malaysia</h3>
       <ul>
         <li>Design, develop and maintain in-house systems and agency web portal.</li>
         <li>Administer and optimize MySQL / SQL Server; data extraction, validation, reporting, troubleshooting.</li>
@@ -102,7 +111,9 @@
   </ul>
 
   <h2>Awards</h2>
-  <p>—</p>
+  <ul class="kv">
+    <li>Dean's List — Politeknik Ungku Omar (2015 – 2018)</li>
+  </ul>
 </section>
 
 </main>
