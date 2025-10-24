@@ -77,7 +77,18 @@
       <button type="reset" class="btn">Reset</button>
     </div>
   </form>
+  <!-- Submitted data will be rendered here -->
+  <div id="submitted-data" class="submitted-data" aria-live="polite"></div>
 </section>
+
+<!-- Modal (used for success and error pop-ups) -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal-dialog" role="document" aria-labelledby="modal-title">
+    <button class="modal-close" aria-label="Close dialog">×</button>
+    <h3 id="modal-title"></h3>
+    <div id="modal-body" class="modal-body"></div>
+  </div>
+</div>
 
 </main>
 <footer class="site-footer">

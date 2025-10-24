@@ -163,20 +163,83 @@ if (contactForm) {
     const isSubjectValid = validateField(subjectField);
     const isMessageValid = validateField(messageField);
     
-    // If all fields are valid
-    if (isNameValid && isEmailValid && isSubjectValid && isMessageValid) {
-      // Success message
-      alert('Thank you! Your message has been sent successfully.\n\n(Note: This is a demo. In production, this would send to a server.)');
-      
-      // Optional: Clear the form
-      contactForm.reset();
-    } else {
-      // Scroll to first error
-      const firstError = contactForm.querySelector('.error');
+    // If any field is invalid, show a validation modal listing the problems
+    const invalids = [];
+    function getFieldLabel(field){
+      const map = { name: 'Full name', email: 'Email', subject: 'Subject', message: 'Message' };
+      return map[field.name] || field.name;
+    }
+    function getFieldErrorMsg(field){
+      const v = field.value.trim();
+      if (!v) return `${getFieldLabel(field)} is required.`;
+      if (field.type === 'email' && !emailRegex.test(v)) return 'Please enter a valid email address (e.g., name@example.com).';
+      return null;
+    }
+
+    [nameField, emailField, subjectField, messageField].forEach(f => {
+      const msg = getFieldErrorMsg(f);
+      if (msg) invalids.push(msg);
+    });
+
+    // Modal utilities
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = modal.querySelector('.modal-close');
+
+    function showModal(title, html){
+      modalTitle.textContent = title;
+      modalBody.innerHTML = html;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      // trap scroll
+      document.body.style.overflow = 'hidden';
+      // focus close button for accessibility
+      modalClose.focus();
+    }
+    function hideModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    // modal close handlers
+    modalClose.addEventListener('click', hideModal);
+    modal.addEventListener('click', (ev) => {
+      if (ev.target === modal) hideModal();
+    });
+    document.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Escape' && modal.classList.contains('open')) hideModal();
+    });
+
+    if (invalids.length) {
+      // Focus and scroll to first invalid field
+      const firstError = contactForm.querySelector('.error') || contactForm.querySelector('input:invalid, textarea:invalid');
       if (firstError) {
         firstError.focus();
         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
+
+      // Build simple list HTML
+      const html = `<p>Please fix the following before submitting:</p><ul class="modal-list">${invalids.map(i => `<li>• ${i}</li>`).join('')}</ul>`;
+      showModal('Please correct the form', html);
+      return;
     }
+
+    // All valid: show submission in centered modal
+    const entries = [
+      ['Full name', nameField.value.trim()],
+      ['Email', emailField.value.trim()],
+      ['Subject', subjectField.value.trim()],
+      ['Message', messageField.value.trim()]
+    ];
+    const listHtml = `<ul class="modal-list">${entries.map(([k,v]) => `<li><div class="mkey">${k}:</div><div class="mval">${v || '-'}</div></li>`).join('')}</ul>`;
+    const when = `<div style="color:var(--muted);font-size:0.9rem;margin-bottom:.5rem">${new Date().toLocaleString()}</div>`;
+    const jsonPre = `<pre>${JSON.stringify({name:nameField.value.trim(),email:emailField.value.trim(),subject:subjectField.value.trim(),message:messageField.value.trim(),submittedAt:new Date().toISOString()},null,2)}</pre>`;
+
+    showModal('Submission received', when + listHtml + jsonPre);
+
+    // Optionally reset the form after showing modal (leave commented to keep values):
+    // contactForm.reset();
   });
 }
