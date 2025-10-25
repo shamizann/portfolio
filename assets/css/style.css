@@ -275,6 +275,52 @@ a:focus{outline:3px solid var(--ring);outline-offset:2px;border-radius:.25rem}
 }
 
 /* Submitted data display */
+.submitted-data {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.submitted-data h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent-2);
+}
+
+.submitted-data ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submitted-data li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.submitted-data li:last-child {
+  border-bottom: none;
+}
+
+.submitted-data strong {
+  color: var(--muted);
+  font-weight: 500;
+  display: inline-block;
+  min-width: 140px;
+}
+
+/* Light mode overrides for submitted data */
+:root.light .submitted-data {
+  border-color: rgba(15,23,42,.08);
+}
+
+:root.light .submitted-data li {
+  border-bottom-color: rgba(15,23,42,.06);
+}
+
+/* Submitted data display */
 .submitted-data{margin-top:1rem}
 .submitted-card{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(34,211,238,.03));border:1px solid rgba(255,255,255,.04);padding:1rem;border-radius:.75rem}
 .submitted-card h3{margin:0 0 .5rem;font-size:1.1rem}

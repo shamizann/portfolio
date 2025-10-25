@@ -54,12 +54,12 @@
 </section>
 
 <section class="container narrow">
-  <form class="contact-form" aria-describedby="contact-hint" action="#" method="post" novalidate>
+  <form id="contactForm" class="contact-form" aria-describedby="contact-hint" action="#" method="post" novalidate>
     <p id="contact-hint" class="sr-only">Fields marked * are required.</p>
     
     <div class="field">
-      <label for="name">Full Name *</label>
-      <input id="name" name="name" type="text" required />
+      <label for="fullName">Full Name *</label>
+      <input id="fullName" name="name" type="text" required />
     </div>
     
     <div class="field">
@@ -90,7 +90,7 @@
     </div>
     
     <div class="field">
-      <label>Areas of Interest</label>
+      <label>Areas of Interest *</label>
       <div class="checkbox-group">
         <label class="checkbox-label">
           <input type="checkbox" name="interest" value="Web Development" />
@@ -112,7 +112,7 @@
     </div>
     
     <div class="field">
-      <label>Preferred Contact Method</label>
+      <label>Preferred Contact Method *</label>
       <div class="radio-group">
         <label class="radio-label">
           <input type="radio" name="contactMethod" value="Email" checked />
@@ -141,6 +141,11 @@
     </div>
     
     <div class="field">
+      <label for="subject">Subject *</label>
+      <input id="subject" name="subject" type="text" required />
+    </div>
+    
+    <div class="field">
       <label for="message">Message *</label>
       <textarea id="message" name="message" rows="4" required></textarea>
     </div>
@@ -162,8 +167,9 @@
       <button type="reset" class="btn">Reset</button>
     </div>
   </form>
+  
   <!-- Submitted data will be rendered here -->
-  <div id="submitted-data" class="submitted-data" aria-live="polite"></div>
+  <div id="submittedData" class="submitted-data" style="display:none;" aria-live="polite"></div>
 </section>
 
 <!-- Modal (used for success and error pop-ups) -->
