@@ -54,31 +54,122 @@
 </section>
 
 <section class="container narrow">
-  <form class="contact-form" aria-describedby="contact-hint" action="#" method="post" novalidate>
+  <form id="contactForm" class="contact-form" aria-describedby="contact-hint" action="#" method="post" novalidate>
     <p id="contact-hint" class="sr-only">Fields marked * are required.</p>
+    
     <div class="field">
-      <label for="name">Full Name *</label>
-      <input id="name" name="name" type="text" required />
+      <label for="fullName">Full Name *</label>
+      <input id="fullName" name="name" type="text" required />
     </div>
+    
     <div class="field">
-      <label for="email">Email *</label>
+      <label for="email">Email Address *</label>
       <input id="email" name="email" type="email" required />
     </div>
+    
+    <div class="field">
+      <label for="phone">Phone Number</label>
+      <input id="phone" name="phone" type="tel" />
+    </div>
+    
+    <div class="field">
+      <label for="company">Organization / Company</label>
+      <input id="company" name="company" type="text" />
+    </div>
+    
+    <div class="field">
+      <label for="industry">Industry Field</label>
+      <select id="industry" name="industry">
+        <option value="">-- Select Industry --</option>
+        <option value="IT & Software">IT &amp; Software</option>
+        <option value="AI & Automation">AI &amp; Automation</option>
+        <option value="Data Analytics">Data Analytics</option>
+        <option value="Networking">Networking</option>
+        <option value="Education / Training">Education / Training</option>
+      </select>
+    </div>
+    
+    <div class="field">
+      <label>Areas of Interest *</label>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox" name="interest" value="Web Development" />
+          <span>Web Development</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="interest" value="System Integration" />
+          <span>System Integration</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="interest" value="AI & Automation" />
+          <span>AI &amp; Automation</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="interest" value="Database Management" />
+          <span>Database Management</span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="field">
+      <label>Preferred Contact Method *</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="contactMethod" value="Email" checked />
+          <span>Email</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="contactMethod" value="Phone" />
+          <span>Phone</span>
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="contactMethod" value="LinkedIn" />
+          <span>LinkedIn</span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="field">
+      <label for="purpose">Purpose of Contact *</label>
+      <select id="purpose" name="purpose" required>
+        <option value="">-- Select Purpose --</option>
+        <option value="Job Opportunity">Job Opportunity</option>
+        <option value="Project Collaboration">Project Collaboration</option>
+        <option value="Internship">Internship</option>
+        <option value="General Inquiry">General Inquiry</option>
+      </select>
+    </div>
+    
     <div class="field">
       <label for="subject">Subject *</label>
       <input id="subject" name="subject" type="text" required />
     </div>
+    
     <div class="field">
       <label for="message">Message *</label>
-      <textarea id="message" name="message" rows="6" required></textarea>
+      <textarea id="message" name="message" rows="4" required></textarea>
     </div>
+    
+    <div class="field">
+      <label for="fileUpload">Attach File (optional)</label>
+      <input id="fileUpload" name="fileUpload" type="file" accept=".pdf,.doc,.docx" />
+    </div>
+    
+    <div class="field">
+      <label class="checkbox-label">
+        <input type="checkbox" id="subscribe" name="subscribe" />
+        <span>Subscribe to future updates</span>
+      </label>
+    </div>
+    
     <div class="actions">
       <button type="submit" class="btn primary">Submit</button>
       <button type="reset" class="btn">Reset</button>
     </div>
   </form>
+  
   <!-- Submitted data will be rendered here -->
-  <div id="submitted-data" class="submitted-data" aria-live="polite"></div>
+  <div id="submittedData" class="submitted-data" style="display:none;" aria-live="polite"></div>
 </section>
 
 <!-- Modal (used for success and error pop-ups) -->

@@ -90,15 +90,23 @@ window.addEventListener('load', () => {
 });
 
 // Contact form handling
-const contactForm = document.querySelector('.contact-form');
+const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  const nameField = document.getElementById('name');
+  const nameField = document.getElementById('fullName');
   const emailField = document.getElementById('email');
+  const phoneField = document.getElementById('phone');
+  const companyField = document.getElementById('company');
+  const industryField = document.getElementById('industry');
+  const purposeField = document.getElementById('purpose');
   const subjectField = document.getElementById('subject');
   const messageField = document.getElementById('message');
+  const fileUploadField = document.getElementById('fileUpload');
+  const subscribeField = document.getElementById('subscribe');
 
   // Email validation regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Phone validation regex (optional, allows various formats)
+  const phoneRegex = /^[0-9+\-\s()]{7,}$/;
 
   // Function to show error message
   function showError(field, message) {
@@ -128,7 +136,13 @@ if (contactForm) {
   function validateField(field) {
     const value = field.value.trim();
     
-    if (!value) {
+    // Skip validation for non-required fields if empty
+    if (!field.required && !value) {
+      clearError(field);
+      return true;
+    }
+    
+    if (field.required && !value) {
       showError(field, 'This field is required.');
       return false;
     }
@@ -139,48 +153,58 @@ if (contactForm) {
       return false;
     }
     
+    // Phone validation (only if a value is entered)
+    if (field.type === 'tel' && value && !phoneRegex.test(value)) {
+      showError(field, 'Please enter a valid phone number.');
+      return false;
+    }
+    
     clearError(field);
     return true;
   }
 
   // Real-time validation on blur
-  [nameField, emailField, subjectField, messageField].forEach(field => {
-    field.addEventListener('blur', () => validateField(field));
-    field.addEventListener('input', () => {
-      if (field.classList.contains('error')) {
-        validateField(field);
-      }
-    });
+  [nameField, emailField, phoneField, companyField, industryField, purposeField, subjectField, messageField].forEach(field => {
+    if (field) {
+      field.addEventListener('blur', () => validateField(field));
+      field.addEventListener('input', () => {
+        if (field.classList.contains('error')) {
+          validateField(field);
+        }
+      });
+    }
   });
 
   // Form submission
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
-    // Validate all fields
-    const isNameValid = validateField(nameField);
-    const isEmailValid = validateField(emailField);
-    const isSubjectValid = validateField(subjectField);
-    const isMessageValid = validateField(messageField);
+    // Get all form values
+    const name = nameField.value.trim();
+    const email = emailField.value.trim();
+    const phone = phoneField ? phoneField.value.trim() : '';
+    const company = companyField ? companyField.value.trim() : '';
+    const industry = industryField ? industryField.value : '';
+    const purpose = purposeField.value;
+    const subject = subjectField.value.trim();
+    const message = messageField.value.trim();
+    const interests = Array.from(contactForm.querySelectorAll('input[name="interest"]:checked')).map(cb => cb.value);
+    const contactMethod = contactForm.querySelector('input[name="contactMethod"]:checked')?.value || '';
+    const fileName = fileUploadField && fileUploadField.files.length ? fileUploadField.files[0].name : '';
+    const subscribe = subscribeField ? subscribeField.checked : false;
     
-    // If any field is invalid, show a validation modal listing the problems
-    const invalids = [];
-    function getFieldLabel(field){
-      const map = { name: 'Full name', email: 'Email', subject: 'Subject', message: 'Message' };
-      return map[field.name] || field.name;
-    }
-    function getFieldErrorMsg(field){
-      const v = field.value.trim();
-      if (!v) return `${getFieldLabel(field)} is required.`;
-      if (field.type === 'email' && !emailRegex.test(v)) return 'Please enter a valid email address (e.g., name@example.com).';
-      return null;
-    }
-
-    [nameField, emailField, subjectField, messageField].forEach(f => {
-      const msg = getFieldErrorMsg(f);
-      if (msg) invalids.push(msg);
-    });
-
+    // Comprehensive validation
+    const errors = [];
+    
+    if (!name) errors.push("Full Name is required.");
+    if (!email || !emailRegex.test(email)) errors.push("A valid Email Address is required.");
+    if (!subject) errors.push("Subject is required.");
+    if (!message) errors.push("Message is required.");
+    if (interests.length === 0) errors.push("Please choose at least one Area of Interest.");
+    if (!purpose) errors.push("Please select a Purpose of Contact.");
+    if (!contactMethod) errors.push("Please choose a Preferred Contact Method.");
+    if (phone && !phoneRegex.test(phone)) errors.push("Phone format looks invalid.");
+    
     // Modal utilities
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modal-title');
@@ -192,9 +216,7 @@ if (contactForm) {
       modalBody.innerHTML = html;
       modal.classList.add('open');
       modal.setAttribute('aria-hidden','false');
-      // trap scroll
       document.body.style.overflow = 'hidden';
-      // focus close button for accessibility
       modalClose.focus();
     }
     function hideModal(){
@@ -212,34 +234,40 @@ if (contactForm) {
       if (ev.key === 'Escape' && modal.classList.contains('open')) hideModal();
     });
 
-    if (invalids.length) {
-      // Focus and scroll to first invalid field
-      const firstError = contactForm.querySelector('.error') || contactForm.querySelector('input:invalid, textarea:invalid');
+    if (errors.length) {
+      // Show validation errors in modal
+      const html = `<p>Please fix the following before submitting:</p><ul class="modal-list">${errors.map(err => `<li>• ${err}</li>`).join('')}</ul>`;
+      showModal('Please correct the form', html);
+      
+      // Scroll to first error field
+      const firstError = contactForm.querySelector('.error') || contactForm.querySelector('input:invalid, textarea:invalid, select:invalid');
       if (firstError) {
         firstError.focus();
         firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
-
-      // Build simple list HTML
-      const html = `<p>Please fix the following before submitting:</p><ul class="modal-list">${invalids.map(i => `<li>• ${i}</li>`).join('')}</ul>`;
-      showModal('Please correct the form', html);
       return;
     }
 
-    // All valid: show submission in centered modal
-    const entries = [
-      ['Full name', nameField.value.trim()],
-      ['Email', emailField.value.trim()],
-      ['Subject', subjectField.value.trim()],
-      ['Message', messageField.value.trim()]
-    ];
-    const listHtml = `<ul class="modal-list">${entries.map(([k,v]) => `<li><div class="mkey">${k}:</div><div class="mval">${v || '-'}</div></li>`).join('')}</ul>`;
-    const when = `<div style="color:var(--muted);font-size:0.9rem;margin-bottom:.5rem">${new Date().toLocaleString()}</div>`;
-    const jsonPre = `<pre>${JSON.stringify({name:nameField.value.trim(),email:emailField.value.trim(),subject:subjectField.value.trim(),message:messageField.value.trim(),submittedAt:new Date().toISOString()},null,2)}</pre>`;
-
-    showModal('Submission received', when + listHtml + jsonPre);
-
-    // Optionally reset the form after showing modal (leave commented to keep values):
-    // contactForm.reset();
+    // All valid: Display results on page
+    const out = document.getElementById('submittedData');
+    out.style.display = 'block';
+    out.innerHTML = `
+      <h3>Submitted Details</h3>
+      <ul>
+        <li><strong>Full Name:</strong> ${name}</li>
+        <li><strong>Email:</strong> ${email}</li>
+        ${phone ? `<li><strong>Phone:</strong> ${phone}</li>` : ''}
+        ${company ? `<li><strong>Company:</strong> ${company}</li>` : ''}
+        ${industry ? `<li><strong>Industry:</strong> ${industry}</li>` : ''}
+        <li><strong>Areas of Interest:</strong> ${interests.join(', ')}</li>
+        <li><strong>Preferred Contact:</strong> ${contactMethod}</li>
+        <li><strong>Purpose:</strong> ${purpose}</li>
+        <li><strong>Subject:</strong> ${subject}</li>
+        <li><strong>Message:</strong> ${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</li>
+        ${fileName ? `<li><strong>Attached File:</strong> ${fileName}</li>` : ''}
+        <li><strong>Subscribed:</strong> ${subscribe ? 'Yes' : 'No'}</li>
+      </ul>
+    `;
+    out.scrollIntoView({ behavior: 'smooth' });
   });
 }

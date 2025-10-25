@@ -190,9 +190,23 @@ a:focus{outline:3px solid var(--ring);outline-offset:2px;border-radius:.25rem}
 .contact-form{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:1rem;padding:1rem}
 .field{display:flex;flex-direction:column;margin:.75rem 0}
 .field label{margin-bottom:0.5rem;font-weight:500}
-.field input,.field textarea{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--text);padding:.75rem;border-radius:.6rem;font-size:1rem;min-height:44px}
-.field input:focus,.field textarea:focus{outline:3px solid var(--ring);border-color:transparent}
+.field input,.field textarea,.field select{background:transparent;border:1px solid rgba(255,255,255,.25);color:var(--text);padding:.75rem;border-radius:.6rem;font-size:1rem;min-height:44px}
+.field input:focus,.field textarea:focus,.field select:focus{outline:3px solid var(--ring);border-color:transparent}
 .field textarea{min-height:120px;resize:vertical}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e5e7eb' d='M6 9L1 4h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.75rem center;padding-right:2.5rem}
+.field input[type="file"]{padding:.5rem;cursor:pointer}
+.field input[type="file"]::file-selector-button{background:var(--accent);color:#fff;border:none;padding:.4rem .75rem;border-radius:.4rem;cursor:pointer;font-size:.9rem;margin-right:.5rem;transition:all 0.2s ease}
+.field input[type="file"]::file-selector-button:hover{background:var(--accent-2)}
+
+/* Checkbox and radio groups */
+.checkbox-group,.radio-group{display:flex;flex-direction:column;gap:.5rem;margin-top:.25rem}
+.checkbox-label,.radio-label{display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.25rem 0}
+.checkbox-label input[type="checkbox"],.radio-label input[type="radio"]{width:18px;height:18px;cursor:pointer;accent-color:var(--accent)}
+.checkbox-label span,.radio-label span{user-select:none}
+
+/* Single checkbox (like subscribe) */
+.field .checkbox-label{margin-top:.25rem}
+
 .actions{display:flex;gap:.75rem;margin-top:1rem}
 .actions button{flex:1;min-height:48px;font-size:1rem}
 
@@ -201,12 +215,17 @@ a:focus{outline:3px solid var(--ring);outline-offset:2px;border-radius:.25rem}
   border-color:rgba(15,23,42,.12);
 }
 :root.light .field input,
-:root.light .field textarea{
+:root.light .field textarea,
+:root.light .field select{
   border-color:rgba(15,23,42,.25);
 }
 :root.light .field input:hover,
-:root.light .field textarea:hover{
+:root.light .field textarea:hover,
+:root.light .field select:hover{
   border-color:rgba(15,23,42,.35);
+}
+:root.light .field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230f172a' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
 }
 
 /* Light-mode contrast improvements across components */
@@ -231,12 +250,12 @@ a:focus{outline:3px solid var(--ring);outline-offset:2px;border-radius:.25rem}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 /* Form validation error styles */
-.field input.error, .field textarea.error {
+.field input.error, .field textarea.error, .field select.error {
   border-color: #ef4444;
   background: rgba(239, 68, 68, 0.05);
 }
 
-.field input.error:focus, .field textarea.error:focus {
+.field input.error:focus, .field textarea.error:focus, .field select.error:focus {
   outline: 3px solid rgba(239, 68, 68, 0.3);
   border-color: #ef4444;
 }
@@ -253,6 +272,52 @@ a:focus{outline:3px solid var(--ring);outline-offset:2px;border-radius:.25rem}
 .error-message::before {
   content: "⚠";
   font-size: 1rem;
+}
+
+/* Submitted data display */
+.submitted-data {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.submitted-data h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent-2);
+}
+
+.submitted-data ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.submitted-data li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.submitted-data li:last-child {
+  border-bottom: none;
+}
+
+.submitted-data strong {
+  color: var(--muted);
+  font-weight: 500;
+  display: inline-block;
+  min-width: 140px;
+}
+
+/* Light mode overrides for submitted data */
+:root.light .submitted-data {
+  border-color: rgba(15,23,42,.08);
+}
+
+:root.light .submitted-data li {
+  border-bottom-color: rgba(15,23,42,.06);
 }
 
 /* Submitted data display */
